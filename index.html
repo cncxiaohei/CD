@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>哈尔滨家用充电桩电价表</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header:before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .location {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .location i {
+            margin-right: 5px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-title {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: #1a73e8;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            width: 30%;
+        }
+        
+        .legend-item.peak {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+        
+        .legend-item.flat {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .legend-item.valley {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+        
+        .legend-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        
+        .peak .legend-icon {
+            background: #E74C3C;
+            color: white;
+        }
+        
+        .flat .legend-icon {
+            background: #3498DB;
+            color: white;
+        }
+        
+        .valley .legend-icon {
+            background: #2ECC71;
+            color: white;
+        }
+        
+        .legend-text {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .legend-price {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+        
+        .peak .legend-price {
+            color: #E74C3C;
+        }
+        
+        .flat .legend-price {
+            color: #3498DB;
+        }
+        
+        .valley .legend-price {
+            color: #2ECC71;
+        }
+        
+        .table-container {
+            padding: 10px 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #5f6368;
+        }
+        
+        td {
+            padding: 14px 10px;
+            font-size: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .time-cell {
+            font-weight: 500;
+        }
+        
+        .type-cell {
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 13px;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .fee-cell {
+            font-weight: 600;
+        }
+        
+        .peak .type-cell {
+            background: #E74C3C;
+            color: white;
+        }
+        
+        .flat .type-cell {
+            background: #3498DB;
+            color: white;
+        }
+        
+        .valley .type-cell {
+            background: #2ECC71;
+            color: white;
+        }
+        
+        .tip-box {
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            margin: 15px;
+            border-left: 4px solid #1a73e8;
+        }
+        
+        .tip-box h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #0d47a1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tip-box h3 i {
+            margin-right: 8px;
+        }
+        
+        .tip-box ul {
+            padding-left: 20px;
+        }
+        
+        .tip-box li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .savings-card {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .savings-card h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .savings-card h3 i {
+            margin-right: 10px;
+        }
+        
+        .savings-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .savings-text {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .savings-percent {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px 15px 15px;
+            color: #777;
+            font-size: 13px;
+        }
+        
+        .footer-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .footer-logo div {
+            width: 40px;
+            height: 40px;
+            background: #1a73e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 5px;
+        }
+        
+        .qrcode-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .qrcode-placeholder {
+            width: 180px;
+            height: 180px;
+            background: #f0f4f8;
+            border: 1px dashed #ccc;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .wechat-tip {
+            font-size: 14px;
+            color: #1a73e8;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        /* 微信优化样式 */
+        ::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+        
+        .highlight {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .time-highlight {
+            background: #fff8e1;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+            }
+            
+            .legend-text {
+                font-size: 12px;
+            }
+            
+            th {
+                font-size: 13px;
+                padding: 10px 5px;
+            }
+            
+            td {
+                font-size: 14px;
+                padding: 12px 5px;
+            }
+            
+            .legend {
+                padding: 10px 5px;
+            }
+            
+            .legend-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>哈尔滨家用充电桩电价表</h1>
+        <p class="subtitle">国家电网哈尔滨供电公司峰谷平电价政策</p>
+        <div class="location">
+            <i class="fas fa-map-marker-alt"></i> 哈尔滨市及周边区县适用
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-bolt"></i> 峰谷平时段电价
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item peak">
+                <div class="legend-icon"><i class="fas fa-fire"></i></div>
+                <div class="legend-text">峰时段</div>
+                <div class="legend-price">0.7662元</div>
+            </div>
+            
+            <div class="legend-item flat">
+                <div class="legend-icon"><i class="fas fa-balance-scale"></i></div>
+                <div class="legend-text">平时段</div>
+                <div class="legend-price">0.5130元</div>
+            </div>
+            
+            <div class="legend-item valley">
+                <div class="legend-icon"><i class="fas fa-moon"></i></div>
+                <div class="legend-text">谷时段</div>
+                <div class="legend-price">0.2598元</div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>时段</th>
+                        <th>类型</th>
+                        <th>电价(元/度)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="valley">
+                        <td class="time-cell">00:00 - 05:30</td>
+                        <td><span class="type-cell">谷时段</span></td>
+                        <td class="fee-cell">0.2598</td>
+                    </tr>
+                    <tr class="flat">
+                        <td class="time-cell">05:30 - 07:00</td>
+                        <td><span class="type-cell">平时段</span></td>
+                        <td class="fee-cell">0.5130</td>
+                    </tr>
+                    <tr class="peak">
+                        <td class="time-cell">07:00 - 08:00</td>
+                        <td><span class="type-cell">峰时段</span></td>
+                        <td class="fee-cell">0.7662</td>
+                    </tr>
+                    <tr class="flat">
+                        <td class="time-cell">08:00 - 09:00</td>
+                        <td><span class="type-cell">平时段</span></td>
+                        <td class="fee-cell">0.5130</td>
+                    </tr>
+                    <tr class="peak">
+                        <td class="time-cell">09:00 - 11:30</td>
+                        <td><span class="type-cell">峰时段</span></td>
+                        <td class="fee-cell">0.7662</td>
+                    </tr>
+                    <tr class="flat">
+                        <td class="time-cell">11:30 - 12:00</td>
+                        <td><span class="type-cell">平时段</span></td>
+                        <td class="fee-cell">0.5130</td>
+                    </tr>
+                    <tr class="valley">
+                        <td class="time-cell">12:00 - 14:00</td>
+                        <td><span class="type-cell">谷时段</span></td>
+                        <td class="fee-cell">0.2598</td>
+                    </tr>
+                    <tr class="flat">
+                        <td class="time-cell">14:00 - 15:30</td>
+                        <td><span class="type-cell">平时段</span></td>
+                        <td class="fee-cell">0.5130</td>
+                    </tr>
+                    <tr class="peak">
+                        <td class="time-cell">15:30 - 20:00</td>
+                        <td><span class="type-cell">峰时段</span></td>
+                        <td class="fee-cell">0.7662</td>
+                    </tr>
+                    <tr class="flat">
+                        <td class="time-cell">20:00 - 23:30</td>
+                        <td><span class="type-cell">平时段</span></td>
+                        <td class="fee-cell">0.5130</td>
+                    </tr>
+                    <tr class="valley">
+                        <td class="time-cell">23:30 - 24:00</td>
+                        <td><span class="type-cell">谷时段</span></td>
+                        <td class="fee-cell">0.2598</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="savings-card">
+        <h3><i class="fas fa-piggy-bank"></i> 充电成本节约建议</h3>
+        <div class="savings-content">
+            <div class="savings-text">
+                在谷时段充电比峰时段节省
+                <span class="savings-percent">66%</span>
+            </div>
+            <i class="fas fa-lightbulb fa-3x" style="opacity: 0.9;"></i>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-info-circle"></i> 使用说明
+        </div>
+        <div class="tip-box">
+            <h3><i class="fas fa-charging-station"></i> 家用充电桩指南</h3>
+            <ul>
+                <li>本电价表适用于<strong>哈尔滨地区家用充电桩</strong></li>
+                <li>需申请<strong class="highlight">峰谷分时电价</strong>计费方式</li>
+                <li><strong>电费按实际充电量计算</strong></li>
+                <li>跨时段充电按<strong>实际充电时间分段计费</strong></li>
+                <li>建议在<span class="time-highlight">23:30-5:30</span>谷时段充电，经济性最佳</li>
+                <li>冬季可提前预热电池提高充电效率</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="qrcode-section">
+        <h3>保存此页面到微信</h3>
+        <p>扫描二维码保存，随时查看电价信息</p>
+        <div class="qrcode-placeholder">
+            <div>二维码位置<br>微信扫一扫</div>
+        </div>
+        <p class="wechat-tip">在微信中点击右上角 ··· 选择"收藏"可永久保存</p>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-logo">
+            <div><i class="fas fa-bolt"></i></div>
+            <div><i class="fas fa-car"></i></div>
+            <div><i class="fas fa-plug"></i></div>
+        </div>
+        <p>© 2023 国家电网哈尔滨供电公司</p>
+        <p>家用充电桩专用电价表 | 数据更新: 2025年6月</p>
+        <p>技术支持: DeepSeek-R1 | 仅供参考，具体以供电公司政策为准</p>
+    </div>
+
+    <script>
+        // 微信浏览器优化
+        document.addEventListener('WeixinJSBridgeReady', function() {
+            WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
+            WeixinJSBridge.on('menu:share:appmessage', function(argv){
+                WeixinJSBridge.invoke('sendAppMessage', {
+                    "appid": "",
+                    "img_url": "https://example.com/ev-logo.png",
+                    "link": window.location.href,
+                    "title": "哈尔滨家用充电桩峰谷平电价表",
+                    "desc": "国家电网哈尔滨供电公司家用充电桩电价信息，合理充电节省费用"
+                });
+            });
+        });
+        
+        // 设置页面标题
+        document.title = "哈尔滨充电桩电价 | 家用峰谷平";
+        
+        // 添加微信分享提示
+        setTimeout(function() {
+            alert('点击右上角···可分享给其他车主或收藏页面');
+        }, 3000);
+    </script>
+</body>
+</html>
