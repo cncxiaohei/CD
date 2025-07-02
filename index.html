@@ -14,13 +14,14 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: #f5f7fa;
+            background: linear-gradient(135deg, #1a2a4f, #2c3e50);
             color: #333;
             line-height: 1.6;
             padding: 15px;
             max-width: 800px;
             margin: 0 auto;
             overflow-x: hidden;
+            min-height: 100vh;
         }
         
         .header {
@@ -33,6 +34,12 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            animation: headerGlow 4s infinite alternate;
+        }
+        
+        @keyframes headerGlow {
+            0% { box-shadow: 0 4px 15px rgba(13, 71, 161, 0.2); }
+            100% { box-shadow: 0 4px 20px rgba(13, 71, 161, 0.5), 0 0 30px rgba(52, 152, 219, 0.3); }
         }
         
         .header:before {
@@ -52,6 +59,7 @@
             font-weight: 600;
             position: relative;
             z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .subtitle {
@@ -75,21 +83,28 @@
         }
         
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.92);
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
         .card-title {
-            background: #f8f9fa;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
             padding: 15px 20px;
             font-size: 18px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #dee2e6;
+            color: #1a73e8;
         }
         
         .legend {
@@ -108,6 +123,11 @@
             padding: 10px;
             border-radius: 10px;
             width: 30%;
+            transition: transform 0.3s ease;
+        }
+        
+        .legend-item:hover {
+            transform: scale(1.05);
         }
         
         .legend-item.peak {
@@ -135,18 +155,40 @@
             margin-bottom: 8px;
             font-size: 18px;
             color: white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
         
         .peak .legend-icon {
             background: #E74C3C;
+            animation: pulse-red 2s infinite;
         }
         
         .flat .legend-icon {
             background: #3498DB;
+            animation: pulse-blue 2s infinite;
         }
         
         .valley .legend-icon {
             background: #2ECC71;
+            animation: pulse-green 2s infinite;
+        }
+        
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+        }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
         }
         
         .legend-text {
@@ -174,11 +216,13 @@
         
         .table-container {
             padding: 10px 5px;
+            position: relative;
         }
         
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
         
         th {
@@ -187,17 +231,20 @@
             font-size: 14px;
             font-weight: 600;
             color: #5f6368;
+            position: sticky;
+            top: 0;
         }
         
         td {
             padding: 14px 10px;
             font-size: 15px;
-            border-bottom: 1px solid #f0f0f0;
             text-align: center;
+            position: relative;
+            transition: background-color 0.3s ease;
         }
         
-        tr:last-child td {
-            border-bottom: none;
+        tr:not(:last-child) td {
+            border-bottom: 1px solid #f0f0f0;
         }
         
         .time-cell {
@@ -211,6 +258,7 @@
             display: inline-block;
             min-width: 60px;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .fee-cell {
@@ -229,12 +277,69 @@
             background: #2ECC71;
         }
         
+        /* 当前时间段高亮效果 */
+        tr.current-time td {
+            background-color: rgba(255, 221, 85, 0.15);
+            position: relative;
+            animation: highlightPulse 2s infinite;
+        }
+        
+        @keyframes highlightPulse {
+            0% { background-color: rgba(255, 221, 85, 0.15); }
+            50% { background-color: rgba(255, 221, 85, 0.3); }
+            100% { background-color: rgba(255, 221, 85, 0.15); }
+        }
+        
+        .current-time-indicator {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #FFD700;
+            animation: bounce 1s infinite alternate;
+            filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.7));
+            z-index: 10;
+        }
+        
+        @keyframes bounce {
+            0% { transform: translateY(-50%) translateX(0); }
+            100% { transform: translateY(-50%) translateX(5px); }
+        }
+        
+        .current-time-label {
+            position: absolute;
+            left: -10px;
+            top: -10px;
+            background: #FFD700;
+            color: #333;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            animation: blink 1.5s infinite;
+            z-index: 10;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
         .tip-box {
             padding: 15px;
             background: #e3f2fd;
             border-radius: 10px;
             margin: 15px;
             border-left: 4px solid #1a73e8;
+            transition: all 0.3s ease;
+        }
+        
+        .tip-box:hover {
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .tip-box h3 {
@@ -259,16 +364,31 @@
             padding: 20px;
             margin: 15px;
             box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .savings-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
         }
         
         .savings-card h3 {
             font-size: 18px;
             margin-bottom: 15px;
+            position: relative;
         }
         
         .savings-content {
             display: flex;
             align-items: center;
+            position: relative;
         }
         
         .savings-text {
@@ -279,13 +399,21 @@
         .savings-percent {
             font-size: 28px;
             font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: scalePulse 1.5s infinite;
+        }
+        
+        @keyframes scalePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .footer {
             text-align: center;
             padding: 15px 15px 10px;
-            color: #777;
+            color: #aaa;
             font-size: 13px;
+            margin-top: 20px;
         }
         
         .qrcode-section {
@@ -295,6 +423,12 @@
             text-align: center;
             margin: 20px 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .qrcode-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
         
         .qrcode-img {
@@ -308,6 +442,7 @@
             align-items: center;
             justify-content: center;
             border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .qrcode-img img {
@@ -339,6 +474,12 @@
             padding: 2px 5px;
             border-radius: 4px;
             font-weight: 500;
+            animation: highlightFlash 2s infinite;
+        }
+        
+        @keyframes highlightFlash {
+            0%, 100% { background-color: #fff8e1; }
+            50% { background-color: #ffecb3; }
         }
         
         /* 响应式调整 */
@@ -382,6 +523,16 @@
             .qrcode-img {
                 width: 150px;
                 height: 150px;
+            }
+            
+            .current-time-indicator {
+                font-size: 20px;
+                left: -15px;
+            }
+            
+            .current-time-label {
+                font-size: 10px;
+                padding: 1px 6px;
             }
         }
     </style>
@@ -430,57 +581,57 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="valley">
+                    <tr class="valley" id="time-00-05">
                         <td class="time-cell">00:00 - 05:30</td>
                         <td><span class="type-cell">谷时段</span></td>
                         <td class="fee-cell">0.2598</td>
                     </tr>
-                    <tr class="flat">
+                    <tr class="flat" id="time-05-07">
                         <td class="time-cell">05:30 - 07:00</td>
                         <td><span class="type-cell">平时段</span></td>
                         <td class="fee-cell">0.5130</td>
                     </tr>
-                    <tr class="peak">
+                    <tr class="peak" id="time-07-08">
                         <td class="time-cell">07:00 - 08:00</td>
                         <td><span class="type-cell">峰时段</span></td>
                         <td class="fee-cell">0.7662</td>
                     </tr>
-                    <tr class="flat">
+                    <tr class="flat" id="time-08-09">
                         <td class="time-cell">08:00 - 09:00</td>
                         <td><span class="type-cell">平时段</span></td>
                         <td class="fee-cell">0.5130</td>
                     </tr>
-                    <tr class="peak">
+                    <tr class="peak" id="time-09-11">
                         <td class="time-cell">09:00 - 11:30</td>
                         <td><span class="type-cell">峰时段</span></td>
                         <td class="fee-cell">0.7662</td>
                     </tr>
-                    <tr class="flat">
+                    <tr class="flat" id="time-11-12">
                         <td class="time-cell">11:30 - 12:00</td>
                         <td><span class="type-cell">平时段</span></td>
                         <td class="fee-cell">0.5130</td>
                     </tr>
-                    <tr class="valley">
+                    <tr class="valley" id="time-12-14">
                         <td class="time-cell">12:00 - 14:00</td>
                         <td><span class="type-cell">谷时段</span></td>
                         <td class="fee-cell">0.2598</td>
                     </tr>
-                    <tr class="flat">
+                    <tr class="flat" id="time-14-15">
                         <td class="time-cell">14:00 - 15:30</td>
                         <td><span class="type-cell">平时段</span></td>
                         <td class="fee-cell">0.5130</td>
                     </tr>
-                    <tr class="peak">
+                    <tr class="peak" id="time-15-20">
                         <td class="time-cell">15:30 - 20:00</td>
                         <td><span class="type-cell">峰时段</span></td>
                         <td class="fee-cell">0.7662</td>
                     </tr>
-                    <tr class="flat">
+                    <tr class="flat" id="time-20-23">
                         <td class="time-cell">20:00 - 23:30</td>
                         <td><span class="type-cell">平时段</span></td>
                         <td class="fee-cell">0.5130</td>
                     </tr>
-                    <tr class="valley">
+                    <tr class="valley" id="time-23-24">
                         <td class="time-cell">23:30 - 24:00</td>
                         <td><span class="type-cell">谷时段</span></td>
                         <td class="fee-cell">0.2598</td>
@@ -536,6 +687,95 @@
     <script>
         // 设置页面标题
         document.title = "哈尔滨充电桩电价 | 家用峰谷平";
+        
+        // 高亮当前时间段
+        function highlightCurrentTime() {
+            // 获取当前时间
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentMinutes = hours * 60 + minutes;
+            
+            // 定义时间段映射
+            const timeSlots = [
+                { id: 'time-00-05', start: 0, end: 5*60+30 },    // 00:00 - 05:30
+                { id: 'time-05-07', start: 5*60+30, end: 7*60 },  // 05:30 - 07:00
+                { id: 'time-07-08', start: 7*60, end: 8*60 },     // 07:00 - 08:00
+                { id: 'time-08-09', start: 8*60, end: 9*60 },     // 08:00 - 09:00
+                { id: 'time-09-11', start: 9*60, end: 11*60+30 }, // 09:00 - 11:30
+                { id: 'time-11-12', start: 11*60+30, end: 12*60 },// 11:30 - 12:00
+                { id: 'time-12-14', start: 12*60, end: 14*60 },   // 12:00 - 14:00
+                { id: 'time-14-15', start: 14*60, end: 15*60+30 },// 14:00 - 15:30
+                { id: 'time-15-20', start: 15*60+30, end: 20*60 },// 15:30 - 20:00
+                { id: 'time-20-23', start: 20*60, end: 23*60+30 },// 20:00 - 23:30
+                { id: 'time-23-24', start: 23*60+30, end: 24*60 } // 23:30 - 24:00
+            ];
+            
+            // 查找当前时间段
+            let currentSlot = null;
+            for (const slot of timeSlots) {
+                if (currentMinutes >= slot.start && currentMinutes < slot.end) {
+                    currentSlot = slot;
+                    break;
+                }
+            }
+            
+            // 移除之前的高亮
+            document.querySelectorAll('.current-time').forEach(el => {
+                el.classList.remove('current-time');
+            });
+            
+            // 移除之前的指示器
+            document.querySelectorAll('.current-time-indicator, .current-time-label').forEach(el => {
+                el.remove();
+            });
+            
+            // 高亮当前时间段
+            if (currentSlot) {
+                const currentRow = document.getElementById(currentSlot.id);
+                if (currentRow) {
+                    currentRow.classList.add('current-time');
+                    
+                    // 创建脉动箭头
+                    const indicator = document.createElement('div');
+                    indicator.className = 'current-time-indicator';
+                    indicator.innerHTML = '➤';
+                    indicator.style.top = `${currentRow.offsetTop + currentRow.offsetHeight / 2}px`;
+                    
+                    // 创建"当前时段"标签
+                    const label = document.createElement('div');
+                    label.className = 'current-time-label';
+                    label.textContent = '当前时段';
+                    label.style.top = `${currentRow.offsetTop}px`;
+                    
+                    // 添加到表格容器
+                    document.querySelector('.table-container').appendChild(indicator);
+                    document.querySelector('.table-container').appendChild(label);
+                    
+                    // 滚动到当前时间段
+                    currentRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+        
+        // 初始高亮
+        highlightCurrentTime();
+        
+        // 每分钟更新一次
+        setInterval(highlightCurrentTime, 60000);
+        
+        // 添加悬停效果
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'scale(1.01)';
+                row.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            });
+            
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = '';
+                row.style.boxShadow = '';
+            });
+        });
     </script>
 </body>
 </html>
