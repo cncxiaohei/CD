@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>哈尔滨家用充电桩电价表</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -75,10 +74,6 @@
             z-index: 2;
         }
         
-        .location i {
-            margin-right: 5px;
-        }
-        
         .card {
             background: white;
             border-radius: 15px;
@@ -95,11 +90,6 @@
             display: flex;
             align-items: center;
             border-bottom: 1px solid #eee;
-        }
-        
-        .card-title i {
-            margin-right: 10px;
-            color: #1a73e8;
         }
         
         .legend {
@@ -144,21 +134,19 @@
             justify-content: center;
             margin-bottom: 8px;
             font-size: 18px;
+            color: white;
         }
         
         .peak .legend-icon {
             background: #E74C3C;
-            color: white;
         }
         
         .flat .legend-icon {
             background: #3498DB;
-            color: white;
         }
         
         .valley .legend-icon {
             background: #2ECC71;
-            color: white;
         }
         
         .legend-text {
@@ -222,6 +210,7 @@
             font-size: 13px;
             display: inline-block;
             min-width: 60px;
+            color: white;
         }
         
         .fee-cell {
@@ -230,17 +219,14 @@
         
         .peak .type-cell {
             background: #E74C3C;
-            color: white;
         }
         
         .flat .type-cell {
             background: #3498DB;
-            color: white;
         }
         
         .valley .type-cell {
             background: #2ECC71;
-            color: white;
         }
         
         .tip-box {
@@ -255,12 +241,6 @@
             font-size: 16px;
             margin-bottom: 10px;
             color: #0d47a1;
-            display: flex;
-            align-items: center;
-        }
-        
-        .tip-box h3 i {
-            margin-right: 8px;
         }
         
         .tip-box ul {
@@ -284,12 +264,6 @@
         .savings-card h3 {
             font-size: 18px;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .savings-card h3 i {
-            margin-right: 10px;
         }
         
         .savings-content {
@@ -309,28 +283,9 @@
         
         .footer {
             text-align: center;
-            padding: 25px 15px 15px;
+            padding: 15px 15px 10px;
             color: #777;
             font-size: 13px;
-        }
-        
-        .footer-logo {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        
-        .footer-logo div {
-            width: 40px;
-            height: 40px;
-            background: #1a73e8;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin: 0 5px;
         }
         
         .qrcode-section {
@@ -342,18 +297,23 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .qrcode-placeholder {
+        .qrcode-img {
             width: 180px;
             height: 180px;
-            background: #f0f4f8;
-            border: 1px dashed #ccc;
             margin: 15px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f0f4f8;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
-            color: #999;
-            font-size: 14px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .qrcode-img img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
         }
         
         .wechat-tip {
@@ -418,38 +378,43 @@
                 height: 36px;
                 font-size: 16px;
             }
+            
+            .qrcode-img {
+                width: 150px;
+                height: 150px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>哈尔滨家用充电桩电价表</h1>
-        <p class="subtitle">国家电网哈尔滨供电公司峰谷平电价政策</p>
+        <p class="subtitle">家用充电桩峰谷平电价政策</p>
         <div class="location">
-            <i class="fas fa-map-marker-alt"></i> 哈尔滨市及周边区县适用
+            哈尔滨市及周边区县适用
         </div>
     </div>
     
     <div class="card">
         <div class="card-title">
-            <i class="fas fa-bolt"></i> 峰谷平时段电价
+            峰谷平时段电价
         </div>
         
         <div class="legend">
             <div class="legend-item peak">
-                <div class="legend-icon"><i class="fas fa-fire"></i></div>
+                <div class="legend-icon">峰</div>
                 <div class="legend-text">峰时段</div>
                 <div class="legend-price">0.7662元</div>
             </div>
             
             <div class="legend-item flat">
-                <div class="legend-icon"><i class="fas fa-balance-scale"></i></div>
+                <div class="legend-icon">平</div>
                 <div class="legend-text">平时段</div>
                 <div class="legend-price">0.5130元</div>
             </div>
             
             <div class="legend-item valley">
-                <div class="legend-icon"><i class="fas fa-moon"></i></div>
+                <div class="legend-icon">谷</div>
                 <div class="legend-text">谷时段</div>
                 <div class="legend-price">0.2598元</div>
             </div>
@@ -526,26 +491,26 @@
     </div>
     
     <div class="savings-card">
-        <h3><i class="fas fa-piggy-bank"></i> 充电成本节约建议</h3>
+        <h3>充电成本节约建议</h3>
         <div class="savings-content">
             <div class="savings-text">
                 在谷时段充电比峰时段节省
                 <span class="savings-percent">66%</span>
             </div>
-            <i class="fas fa-lightbulb fa-3x" style="opacity: 0.9;"></i>
+            <div style="font-size: 40px;">💰</div>
         </div>
     </div>
     
     <div class="card">
         <div class="card-title">
-            <i class="fas fa-info-circle"></i> 使用说明
+            使用说明
         </div>
         <div class="tip-box">
-            <h3><i class="fas fa-charging-station"></i> 家用充电桩指南</h3>
+            <h3>家用充电桩指南</h3>
             <ul>
                 <li>本电价表适用于<strong>哈尔滨地区家用充电桩</strong></li>
                 <li>需申请<strong class="highlight">峰谷分时电价</strong>计费方式</li>
-                <li><strong>电费按实际充电量计算</strong></li>
+                <li>电费按实际充电量计算，<strong>不含服务费</strong></li>
                 <li>跨时段充电按<strong>实际充电时间分段计费</strong></li>
                 <li>建议在<span class="time-highlight">23:30-5:30</span>谷时段充电，经济性最佳</li>
                 <li>冬季可提前预热电池提高充电效率</li>
@@ -556,45 +521,21 @@
     <div class="qrcode-section">
         <h3>保存此页面到微信</h3>
         <p>扫描二维码保存，随时查看电价信息</p>
-        <div class="qrcode-placeholder">
-            <div>二维码位置<br>微信扫一扫</div>
+        <div class="qrcode-img">
+            <!-- 二维码图片将在这里显示 -->
+            <img src="code.png" alt="电价表二维码">
         </div>
         <p class="wechat-tip">在微信中点击右上角 ··· 选择"收藏"可永久保存</p>
     </div>
     
     <div class="footer">
-        <div class="footer-logo">
-            <div><i class="fas fa-bolt"></i></div>
-            <div><i class="fas fa-car"></i></div>
-            <div><i class="fas fa-plug"></i></div>
-        </div>
-        <p>© 2023 国家电网哈尔滨供电公司</p>
-        <p>家用充电桩专用电价表 | 数据更新: 2025年6月</p>
-        <p>技术支持: DeepSeek-R1 | 仅供参考，具体以供电公司政策为准</p>
+        <p>家用充电桩专用电价表 | 数据更新: 2023年10月</p>
+        <p>仅供参考，具体以供电公司政策为准</p>
     </div>
 
     <script>
-        // 微信浏览器优化
-        document.addEventListener('WeixinJSBridgeReady', function() {
-            WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
-            WeixinJSBridge.on('menu:share:appmessage', function(argv){
-                WeixinJSBridge.invoke('sendAppMessage', {
-                    "appid": "",
-                    "img_url": "https://example.com/ev-logo.png",
-                    "link": window.location.href,
-                    "title": "哈尔滨家用充电桩峰谷平电价表",
-                    "desc": "国家电网哈尔滨供电公司家用充电桩电价信息，合理充电节省费用"
-                });
-            });
-        });
-        
         // 设置页面标题
         document.title = "哈尔滨充电桩电价 | 家用峰谷平";
-        
-        // 添加微信分享提示
-        setTimeout(function() {
-            alert('点击右上角···可分享给其他车主或收藏页面');
-        }, 3000);
     </script>
 </body>
 </html>
